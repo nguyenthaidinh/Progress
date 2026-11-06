@@ -16,7 +16,7 @@ import { createOfficeClient } from '../../src/office/data/client.js';
 
 const wait = async fn => { const start = Date.now(); while (!fn()) { if (Date.now() - start > 10000) throw new Error('Condition timed out'); await new Promise(resolve => setTimeout(resolve, 25)); } };
 async function fixture(t) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'lioops-secure-test-'));
+  const dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'lioops-secure-test-')));
   t.after(async () => {
     const target = await fs.realpath(dir), root = await fs.realpath(os.tmpdir());
     assert.equal(path.dirname(target), root); assert.ok(path.basename(target).startsWith('lioops-secure-test-'));

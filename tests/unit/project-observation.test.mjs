@@ -20,7 +20,7 @@ import { createObservationCache } from '../../src/office/data/observation-cache.
 const grants = { content: true, accountQuota: true, systemMetrics: false };
 const wait = async fn => { const start = Date.now(); while (!fn()) { if (Date.now() - start > 12000) throw new Error('Condition timed out'); await new Promise(resolve => setTimeout(resolve, 20)); } };
 async function fixture(t) {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'lioops-observe-d-')), cleanups = [];
+  const dir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'lioops-observe-d-'))), cleanups = [];
   t.after(async () => {
     for (const close of cleanups.reverse()) await close();
     const root = await fs.realpath(os.tmpdir()), target = await fs.realpath(dir);
