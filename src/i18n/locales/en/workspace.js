@@ -1,0 +1,23 @@
+export default {
+  title: 'AI workspace', subtitle: 'Codex and Claude · focused conversations for your work',
+  close: 'Close AI workspace', history: 'Conversations', search: 'Find a conversation…', new: 'New conversation',
+  newTitle: 'Start new work', newHint: 'Choose an assistant and project, then write your request below.',
+  agent: 'AI assistant', project: 'Project', source: 'Start from an open session (optional)', fresh: 'Start a new conversation', options: 'Conversation options',
+  noProjects: 'No projects yet', noConversations: 'Your AI conversations will appear here.', noMatches: 'No conversations found.',
+  welcome: 'What should AI work on?', welcomeHint: 'Send a request, follow its progress and continue here. Work history is kept separately from the company chat.',
+  messages: 'AI conversation', prompt: 'Task prompt', placeholder: 'Describe what to do in this project…',
+  send: 'Send to AI', sendNote: 'Send a follow-up', yourNote: 'Your follow-up', imageCount: '{n} attached images',
+  composerHint: 'Ctrl+Enter to send · Ctrl+V to paste images · up to {n} images', waitImages: 'Wait for this turn to finish before sending images. You can keep preparing your prompt.',
+  loading: 'Loading conversation…', stopping: 'Stop requested. Waiting for the assistant to confirm.', steps: { one: '{n} action', other: '{n} actions' }, noSteps: 'The assistant is processing your request…', noStepsDone: 'No tool actions in this turn.',
+  waitSending: 'The last request is being confirmed. Wait before switching conversations to avoid duplicate work.',
+  status: { starting: 'Starting', work: 'Working', wait: 'Needs approval', stopping: 'Stopping', done: 'Completed', failed: 'Failed', stopped: 'Stopped', interrupted: 'Needs checking' },
+  errors: {
+    connection: 'Could not connect to the PC. Check the connection and try again.', noDir: 'This project is no longer on the computer.',
+    busy: 'This conversation already has work running. Send a follow-up or wait until it finishes.',
+    workspaceStore: 'Could not save AI history. Check the LioOps data folder before starting new work.',
+    workspaceMissing: 'This conversation was not found. Choose another conversation or start a new one.',
+    workspaceInterrupted: 'LioOps restarted before this work was confirmed complete. Check Codex/Claude on the PC; the request is never replayed automatically.',
+    workspaceFull: 'AI history is full and all conversations are active. Wait for one to finish and try again.',
+    steerUnavailable: 'This session could not receive your follow-up. Keep the text and send it when the assistant finishes.',
+  },
+};

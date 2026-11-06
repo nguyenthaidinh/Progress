@@ -1,0 +1,23 @@
+export default {
+  title: 'Giao việc AI', subtitle: 'Codex và Claude · hội thoại riêng theo công việc',
+  close: 'Đóng giao việc AI', history: 'Cuộc trò chuyện', search: 'Tìm cuộc trò chuyện…', new: 'Cuộc trò chuyện mới',
+  newTitle: 'Bắt đầu công việc mới', newHint: 'Chọn trợ lý và dự án, rồi viết yêu cầu bên dưới.',
+  agent: 'Trợ lý AI', project: 'Dự án', source: 'Bắt đầu từ phiên đang mở (tùy chọn)', fresh: 'Tạo hội thoại mới', options: 'Tùy chọn hội thoại',
+  noProjects: 'Chưa có dự án', noConversations: 'Các cuộc trò chuyện với AI sẽ hiện ở đây.', noMatches: 'Không tìm thấy cuộc trò chuyện.',
+  welcome: 'Bạn muốn AI làm gì?', welcomeHint: 'Gửi yêu cầu, xem tiến trình và nhắn tiếp tại đây. Lịch sử công việc được lưu riêng với nhóm công ty.',
+  messages: 'Nội dung hội thoại AI', prompt: 'Prompt giao việc', placeholder: 'Mô tả việc cần làm trong dự án…',
+  send: 'Gửi cho AI', sendNote: 'Gửi bổ sung', yourNote: 'Bạn bổ sung', imageCount: '{n} ảnh đính kèm',
+  composerHint: 'Ctrl+Enter để gửi · Ctrl+V để dán ảnh · tối đa {n} ảnh', waitImages: 'Chờ AI xong lượt hiện tại để gửi ảnh; bạn vẫn có thể chuẩn bị prompt.',
+  loading: 'Đang tải hội thoại…', stopping: 'Đã yêu cầu dừng. Đang chờ AI xác nhận.', steps: '{n} thao tác', noSteps: 'AI đang xử lý yêu cầu…', noStepsDone: 'Lượt này không có thao tác công cụ.',
+  waitSending: 'Đang xác nhận yêu cầu vừa gửi. Đợi xong rồi chuyển hội thoại để tránh giao việc trùng.',
+  status: { starting: 'Đang bắt đầu', work: 'Đang làm', wait: 'Chờ bạn duyệt', stopping: 'Đang dừng', done: 'Hoàn tất', failed: 'Gặp lỗi', stopped: 'Đã dừng', interrupted: 'Cần kiểm tra' },
+  errors: {
+    connection: 'Chưa kết nối được PC. Kiểm tra kết nối rồi thử lại.', noDir: 'Dự án này không còn trên máy tính.',
+    busy: 'Cuộc trò chuyện đang có công việc chạy. Gửi bổ sung hoặc đợi AI hoàn tất.',
+    workspaceStore: 'Chưa lưu được lịch sử AI. Kiểm tra thư mục dữ liệu của LioOps trước khi giao việc mới.',
+    workspaceMissing: 'Không tìm thấy cuộc trò chuyện này. Chọn một cuộc trò chuyện khác hoặc tạo mới.',
+    workspaceInterrupted: 'LioOps đã khởi động lại khi công việc chưa được xác nhận xong. Kiểm tra phiên Codex/Claude trên PC; hệ thống không tự chạy lại yêu cầu.',
+    workspaceFull: 'Lịch sử AI đã đầy và các cuộc trò chuyện đều đang chạy. Đợi một công việc kết thúc rồi thử lại.',
+    steerUnavailable: 'Phiên này chưa nhận được tin bổ sung. Giữ lại nội dung và gửi khi AI làm xong.',
+  },
+};

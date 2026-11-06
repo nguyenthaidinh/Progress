@@ -1,0 +1,6 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const { total } = require('./calculator.cjs');
+test('empty cart', () => assert.equal(total([]), 0));
+test('quantities', () => assert.equal(total([{ price: 3, quantity: 2 }, { price: 4, quantity: 3 }]), 18));
+test('zero quantity', () => assert.equal(total([{ price: 8, quantity: 0 }]), 0));

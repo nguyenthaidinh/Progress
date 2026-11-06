@@ -1,0 +1,62 @@
+{
+  "name": "lioops",
+  "version": "0.2.0",
+  "private": true,
+  "description": "LioOps: a 3D workspace for Codex and Claude Code, with tasks, approvals and token usage.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/khanh020905/my-office.git"
+  },
+  "homepage": "https://github.com/khanh020905/my-office#readme",
+  "type": "module",
+  "bin": {
+    "lioops": "bin/cli.mjs",
+    "my-office": "bin/cli.mjs"
+  },
+  "scripts": {
+    "dev": "node server/index.mjs --dev",
+    "build": "next build",
+    "build:web": "node scripts/build-web.mjs",
+    "preview:web": "node scripts/preview-web.mjs",
+    "start": "node server/index.mjs",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test",
+    "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test --grep @smoke",
+    "test:observe:web": "playwright test --config playwright.observer.config.ts",
+    "test:codex:live": "node scripts/codex-live.mjs",
+    "test:codex:ui:live": "node scripts/codex-ui-live.mjs",
+    "test:codex:remote:live": "node scripts/codex-ui-live.mjs --remote",
+    "smoke": "node scripts/smoke.mjs",
+    "doctor": "node bin/cli.mjs doctor",
+    "relay:dev": "node relay/index.mjs",
+    "connector:dev": "node connector/index.mjs",
+    "test:observe:https": "node scripts/encrypted-observation-https.mjs",
+    "brand:assets": "node scripts/brand-assets.mjs"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "dependencies": {
+    "@openai/codex": "0.166.0",
+    "jose": "6.2.15",
+    "next": "16.4.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "three": "0.160.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1",
+    "@types/node": "22.18.12",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "eslint": "9.38.0",
+    "eslint-config-next": "16.4.3",
+    "gifenc": "1.0.3",
+    "pngjs": "7.0.0",
+    "sharp": "0.35.5",
+    "typescript": "5.9.3"
+  }
+}
