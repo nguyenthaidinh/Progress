@@ -32,7 +32,7 @@ try {
   const log = [
     { type: 'session_meta', payload: { id: 'public-deploy-smoke', cwd: '/synthetic/Deploy smoke' } },
     { type: 'event_msg', payload: { type: 'user_message', message: marker } },
-    { type: 'event_msg', payload: { type: 'token_count', info: { total_token_usage: { input_tokens: 80000, output_tokens: 2000 }, model_context_window: 100000 } } },
+    { type: 'event_msg', payload: { type: 'token_count', info: { total_token_usage: { input_tokens: 80000, output_tokens: 2000 }, last_token_usage: { total_tokens: 20000 }, model_context_window: 100000 } } },
   ].map(row => JSON.stringify({ timestamp, ...row })).join('\n') + '\n';
   await page.locator('.ob-file-input').setInputFiles({ name: 'rollout-public-smoke.jsonl', mimeType: 'application/json', buffer: Buffer.from(log) });
   await page.locator('.ob-session').waitFor(); assert.match(await page.locator('.ob-metrics').innerText(), /80%/);

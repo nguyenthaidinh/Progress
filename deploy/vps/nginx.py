@@ -78,6 +78,7 @@ def main():
     add_header Referrer-Policy no-referrer always;
     add_header X-Frame-Options SAMEORIGIN always;
     add_header Content-Security-Policy "{csp}" always;
+    add_header Cache-Control $lioops_html_cache_control always;
     location = /healthz {{ default_type application/json; return 200 '{{"ok":true,"app":"LioOps","mode":"observation"}}'; }}
     location = /relay-health {{
         proxy_pass http://127.0.0.1:{args.relay_port}/health;
@@ -106,6 +107,9 @@ def main():
         try_files $uri $uri/ =404;
     }}
 '''
+    # Prevent edge-injected analytics from changing the exported HTML or its script policy.
+    # Empty values do not add a header to relay JSON, whose own no-store policy remains authoritative.
+    print('map $sent_http_content_type $lioops_html_cache_control {\n    default "";\n    ~^text/html "public, no-cache, no-transform";\n}\n')
     if args.certificate_dir:
         print('server {\n    listen 80;\n    listen [::]:80;\n' + common + '    location / { return 301 https://$host$request_uri; }\n}\n')
         print('server {\n    listen 443 ssl http2;\n    listen [::]:443 ssl http2;\n' + common)

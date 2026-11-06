@@ -25,6 +25,8 @@ OFFICE_SITE_URL=https://ops.liotnu.com OFFICE_BUILD_WORKERS=1 NEXT_TELEMETRY_DIS
 
 Sinh vhost bằng `deploy/vps/nginx.py` từ chính HTML đã build. CSP dùng hash inline script của export thay vì cho phép inline script tùy ý. Dùng `--asset-root` trỏ build mới và `--web-root /srv/lioops/current/web-site` làm đường phục vụ ổn định. TLS dùng chứng chỉ đúng hostname; challenge HTTP nằm ở `/var/www/lioops-acme`.
 
+HTML có `Cache-Control: public, no-cache, no-transform` để Cloudflare không tự chèn beacon analytics; CSP chỉ cho script nội bộ và các hash đã build. Frame cùng origin được phép cho văn phòng 3D trong trang nhập log; website khác không được nhúng LioOps. Relay JSON giữ `no-store` riêng.
+
 Trước chuyển bản: giữ lại symlink/config cũ, kiểm tra source/build và `nginx -t`. Đổi `current` nguyên tử, cập nhật service, kiểm tra health rồi reload Nginx. Không restart hoặc thay cấu hình ứng dụng khác. Rollback phải phục hồi cả symlink lẫn vhost cũ vì CSP gắn với HTML của từng bản.
 
 Relay là mailbox trong RAM: restart sẽ mất queue/route tạm. Connector đã ghép sẽ xác thực/đăng ký lại theo cơ chế reconnect; không có dữ liệu AI để migrate ở VPS.
