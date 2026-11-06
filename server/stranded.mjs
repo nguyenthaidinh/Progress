@@ -19,6 +19,12 @@ function git(args, cwd, timeout = 5000) {
   return new Promise((resolve) => execFile('git', args, { cwd, timeout, maxBuffer: 8 << 20, env: { ...process.env, GIT_OPTIONAL_LOCKS: '0', LC_ALL: 'C' } },
     (err, out, errOut) => resolve(err ? { ok: false, out: String(out || ''), err: String(errOut || err.message || '') } : { ok: true, out: String(out) })));
 }
+async function worktrees(cwd) {
+  const result = await git(['worktree', 'list', '--porcelain', '-z'], cwd);
+  // Git 2.34 (Ubuntu 22.04) needs the line-oriented format already supported by the parser.
+  return !result.ok && /unknown (?:switch|option)[^\n]*\bz\b/.test(result.err)
+    ? git(['worktree', 'list', '--porcelain'], cwd) : result;
+}
 const real = (p) => { try { return fs.realpathSync.native(p); } catch { return path.resolve(p); } };   // (native: Windows' long names, not RUNNER~1)
 export const idOf = (p) => crypto.createHash('sha1').update(p).digest('hex').slice(0, 12);
 // git writes paths with / on Windows too (D:/a/b): this computer's own form, so they compare with the session folders
@@ -166,7 +172,7 @@ export function createStranded({ dirs, inUse = () => false, home = os.homedir(),
     const until = Date.now() + budget, items = [], next = new Map(), jobs = [];
     const list = await repos();
     for (const r of list) {
-      const wl = await git(['worktree', 'list', '--porcelain', '-z'], r.from, 5000);
+      const wl = await worktrees(r.from);
       const all = wl.ok ? ours(parseWorktrees(wl.out)) : [];
       if (!all.length) continue;
       const main = all[0], root = main.bare ? r.common : main.path;
@@ -245,7 +251,7 @@ export function createStranded({ dirs, inUse = () => false, home = os.homedir(),
       const busy = !!inUse(real(was.path)) || !!inUse(was.path);
       if (!canRemove({ ...was, inUse: busy })) return { ok: false, code: busy ? 'inUse' : 'notClean', w: was };
       // again, now: still one of the repository's linked worktrees, not locked, nothing new in it
-      const wl = await git(['worktree', 'list', '--porcelain', '-z'], was.repoRoot, 5000), all = wl.ok ? ours(parseWorktrees(wl.out)) : [];
+      const wl = await worktrees(was.repoRoot), all = wl.ok ? ours(parseWorktrees(wl.out)) : [];
       const w = all.find((x) => x.path === was.path);
       if (!w || w.main) return { ok: false, code: 'gone', w: was };
       const rem = await git(['remote'], was.repoRoot, 3000);
