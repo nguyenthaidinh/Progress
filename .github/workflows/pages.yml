@@ -1,11 +1,9 @@
 name: Online demo
 
-# Publishes the demo office (a static site, no server) to GitHub Pages on every push to main.
+# Optional manual demo export. The application is deployed to the owner's VPS.
 # One-time setup: Settings → Pages → Build and deployment → Source: GitHub Actions.
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

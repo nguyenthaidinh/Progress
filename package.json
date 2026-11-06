@@ -6,9 +6,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/khanh020905/my-office.git"
+    "url": "https://github.com/nguyenthaidinh/Progress.git"
   },
-  "homepage": "https://github.com/khanh020905/my-office#readme",
+  "homepage": "https://ops.liotnu.com",
   "type": "module",
   "bin": {
     "lioops": "bin/cli.mjs",

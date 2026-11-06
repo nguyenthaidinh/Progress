@@ -1,6 +1,7 @@
 // Trial relay: volatile opaque mailboxes only. No provider API, filesystem, content log or decryption key.
 import http from 'node:http';
 import { timingSafeEqual } from 'node:crypto';
+import { isIP } from 'node:net';
 import { isSecret, tokenHash, WIRE_LIMIT, secureOrigin } from '../src/shared/remote/crypto.js';
 
 const equal = (a, b) => typeof a === 'string' && typeof b === 'string' && a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
@@ -16,7 +17,7 @@ export function json(res, status, value) {
   res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer' });
   res.end(JSON.stringify(value));
 }
-export function createRelay({ adminToken, origins, now = Date.now, maxRoutes = 32, maxBytes = 8 * 1024 * 1024, pollMs = 12000 } = {}) {
+export function createRelay({ adminToken, origins, now = Date.now, maxRoutes = 32, maxBytes = 8 * 1024 * 1024, pollMs = 12000, trustProxy = false } = {}) {
   if (!isSecret(adminToken) || !origins?.length) throw new Error('Explicit relay admin token and browser origins required');
   const allowed = new Set(origins.map(secureOrigin)), routes = new Map(), rates = new Map(); let queuedBytes = 0;
   function expire(route) {
@@ -40,7 +41,11 @@ export function createRelay({ adminToken, origins, now = Date.now, maxRoutes = 3
     const clock = now();
     for (const route of routes.values()) if (route.expires <= clock) expire(route);
     for (const [key, value] of rates) if (value.until <= clock) rates.delete(key);
-    const ip = req.socket.remoteAddress, rate = rates.get(ip) || { n: 0, until: clock + 60000 };
+    // Only an explicitly enabled loopback proxy may supply the client address. Nginx overwrites this header.
+    const address = req.socket.remoteAddress, forwarded = req.headers['x-real-ip'];
+    const loopback = ['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address);
+    const ip = trustProxy && loopback && typeof forwarded === 'string' && isIP(forwarded) ? forwarded : address;
+    const rate = rates.get(ip) || { n: 0, until: clock + 60000 };
     if (!rates.has(ip) && rates.size >= 1024 || ++rate.n > 180) { json(res, 429, { ok: false }); return; }
     rates.set(ip, rate);
     try {

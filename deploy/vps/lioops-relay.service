@@ -1,0 +1,36 @@
+[Unit]
+Description=LioOps encrypted observation relay
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lioops
+Group=lioops
+WorkingDirectory=/srv/lioops/current
+EnvironmentFile=/etc/lioops/relay.env
+Environment=NODE_ENV=production
+ExecStart=/opt/lioops/node/bin/node /srv/lioops/current/relay/index.mjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictSUIDSGID=yes
+LockPersonality=yes
+UMask=0077
+MemoryMax=256M
+TasksMax=64
+LimitNOFILE=4096
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -25,7 +25,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm test
+      - run: node --test --test-concurrency=1 tests/unit/*.test.mjs
+      - run: node scripts/api-map.mjs --check
       - run: node scripts/module-map.mjs --check   # docs/ARCHITECTURE.md lists every module
       - run: npm run build
         env:
@@ -46,14 +47,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test
+      - run: node --test --test-concurrency=1 tests/unit/*.test.mjs
       - run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: 1
       - run: npm run smoke
 
   e2e:
-    name: End-to-end (demo office in a browser)
+    name: Selected local and public-web regression
     runs-on: ubuntu-24.04   # (ubuntu-latest is Ubuntu 26.04 since 19/10/2026, which Playwright 1.56 has no browsers for)
     needs: check
     steps:
@@ -67,9 +68,11 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: 1
       - run: npx playwright install --with-deps chromium
-      # the smoke tests only: a runner has no GPU, and the whole 3D office in software rendering is too slow for the
-      # rest (every test passes on a machine with a GPU: npm run test:e2e)
-      - run: npm run test:e2e:smoke
+      # These are the accepted transport/provider cases, not the entire legacy visual suite.
+      - name: Local task, live transport and panel regression
+        run: npx playwright test codex.spec.ts live-connection.spec.ts panel-api.spec.ts --grep 'Codex and Claude coexist|real sessions survive offline|panel operations' --workers=1
+      - run: npm run build:web
+      - run: npm run test:observe:web
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -77,4 +80,5 @@ jobs:
           path: |
             playwright-report/
             test-results/
+            test-results-observer-web/
           retention-days: 7
