@@ -27,8 +27,24 @@ try {
   await page.locator('#stage canvas').waitFor({ timeout: 90000 }); await page.locator('#rail-list .ri').first().waitFor({ timeout: 60000 });
   assert.equal(await page.locator('#demo-chip').isVisible(), true);
   await page.screenshot({ path: path.join(out, 'office-demo.png') });
+  await page.goto(new URL('vi/observe/', target).href, { waitUntil: 'networkidle', timeout: 60000 });
+  const timestamp = new Date().toISOString(), marker = 'LIOOPS-PUBLIC-SYNTHETIC-ONLY';
+  const log = [
+    { type: 'session_meta', payload: { id: 'public-deploy-smoke', cwd: '/synthetic/Deploy smoke' } },
+    { type: 'event_msg', payload: { type: 'user_message', message: marker } },
+    { type: 'event_msg', payload: { type: 'token_count', info: { total_token_usage: { input_tokens: 80000, output_tokens: 2000 }, model_context_window: 100000 } } },
+  ].map(row => JSON.stringify({ timestamp, ...row })).join('\n') + '\n';
+  await page.locator('.ob-file-input').setInputFiles({ name: 'rollout-public-smoke.jsonl', mimeType: 'application/json', buffer: Buffer.from(log) });
+  await page.locator('.ob-session').waitFor(); assert.match(await page.locator('.ob-metrics').innerText(), /80%/);
+  assert.match(await page.locator('.ob-messages').innerText(), new RegExp(marker));
+  await page.getByRole('button', { name: 'Văn phòng 3D', exact: true }).click();
+  const office = page.frameLocator('iframe');
+  await office.locator('#stage canvas').waitFor({ timeout: 90000 });
+  await office.locator('#rail-list .ri').first().waitFor({ timeout: 60000 });
+  assert.match(await office.locator('#rail-list').innerText(), /Deploy smoke/);
+  await page.screenshot({ path: path.join(out, 'observer.png') });
   assert.deepEqual(errors, []); assert.deepEqual(pcRequests, []);
-  const report = { status: 'pass', url: target.href, validHttps: true, csp: true, setup: true, explicitDemo: true, pcApiRequests: 0, errors };
+  const report = { status: 'pass', url: target.href, validHttps: true, csp: true, setup: true, explicitDemo: true, browserLogObservation: true, pcApiRequests: 0, errors };
   await fs.writeFile(path.join(out, 'report.json'), JSON.stringify(report, null, 2)); console.log(JSON.stringify(report));
 } catch (error) {
   await page.screenshot({ path: path.join(out, 'failure.png') }).catch(() => {});

@@ -58,7 +58,7 @@ def main():
     for file in asset_root.rglob('*.html'):
         scripts.feed(file.read_text(encoding='utf-8'))
     csp = "; ".join([
-        "default-src 'self'", "base-uri 'self'", "object-src 'none'", "frame-ancestors 'none'",
+        "default-src 'self'", "base-uri 'self'", "object-src 'none'", "frame-ancestors 'self'",
         "script-src 'self' " + ' '.join(sorted(scripts.hashes)),
         "style-src 'self' 'unsafe-inline'", "img-src 'self' data: blob:", "font-src 'self' data:",
         "connect-src 'self' https: wss:", "worker-src 'self' blob:", "media-src 'self' data: blob:",
@@ -76,7 +76,7 @@ def main():
     error_log /var/log/nginx/lioops-error.log warn;
     add_header X-Content-Type-Options nosniff always;
     add_header Referrer-Policy no-referrer always;
-    add_header X-Frame-Options DENY always;
+    add_header X-Frame-Options SAMEORIGIN always;
     add_header Content-Security-Policy "{csp}" always;
     location = /healthz {{ default_type application/json; return 200 '{{"ok":true,"app":"LioOps","mode":"observation"}}'; }}
     location = /relay-health {{
